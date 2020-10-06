@@ -8,6 +8,7 @@ app.use(bodyParser.json())
 
 const server = require('./server');
 
+//Add your email
 var from = 'enteryouremail@gmail.com';
 
 app.get('/',(req,res) => {
