@@ -1,41 +1,28 @@
-const express = require('express')
+const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs')
-const app = express()
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'))
-app.use(bodyParser.json())
+const fs = require('fs');
+const app = express();
 
-const server = require('./server');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use(bodyParser.json());
 
 //Add your email
 var from = 'enteryouremail@gmail.com';
 
-app.get('/',(req,res) => {
-    res.sendFile(__dirname + '/index.html')
-})
+//Set Routes
+const Email = require('./routes/email.js');
 
-app.post('/sendemail',(req, res) => {
-      var to = req.body.to
-      var subject = req.body.subject
-      var message = req.body.message
-      console.log(to)
-      console.log(subject)
-      console.log(message)
-      server(to, from, subject, message);
-      res.redirect('/result.html');
-  }
-)
+app.use('/sendemail', Email);
 
+app.use(express.static(__dirname + '/public'));
 
 app.use((req, res, next) => {
-  console.log(req.headers);
-  res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end('<html><body><h1>Invalid request</h1></body></html>');
+  res.end('<html><body><h2>Requested URL not found</h2></body></html>');
 
 });
 
-app.listen(3000,() => {
+app.listen(3000, () => {
     console.log("App started on Port 3000");
 })
